@@ -1,0 +1,19 @@
+# paths to the different versions of the books
+# template
+# 'files':
+#   book_id (str):
+#     'epub': path to the epub format of the book stored in project_root/data/book_id/book_id.epub
+#     'raw': path to the raw format of the book stored in project_root/data/book_id/book_id.txt
+#     'genre': genre (str) one of the following
+#     'thumbnail': path to the image of the cover stored in project_root/data/book_id/thumbnail.ext
+
+
+# 'meta_data':
+#   book_id (str):
+#     'Title': book_title (str)
+#     'Author': author_name (str)
+#     'Thumbnail': drive url for the book
+#     'Genre': use the information from the subjects of a book to classify the book as one of pre-determined classes
+#     'Description': ?
+#     'SummaryText': drive url for the summary
+#     'AudioUrl': drive link from audio.yml

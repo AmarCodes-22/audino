@@ -1,0 +1,7 @@
+# paths to the summary of the books
+# template
+# book_id (str):
+#   'depth_1': path_to_depth_1_summary stored in project_root/data/book_id/summary/depth_1.txt (str)
+#   'depth_1_url': drive url for the depth_1 sumamry
+#   'depth_2': path_to_depth_2_summary stored in project_root/data/book_id/summary/depth_2.txt (str)
+#   'depth_2_url': drive url for the depth_2 summary
