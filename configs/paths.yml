@@ -1,0 +1,6 @@
+audio_config_file: /home/amar/projects/audino/configs/audio.yml
+books_config_file: /home/amar/projects/audino/configs/books.yml
+configs_dir: /home/amar/projects/audino/configs
+data_dir: /home/amar/projects/audino/data
+project_root: /home/amar/projects/audino
+summary_config_file: /home/amar/projects/audino/configs/summary.yml
