@@ -24,7 +24,7 @@ def setup_paths_config():
         'configs_dir': configs_dir,
         'audio_config_file': audio_config_file, 
         'books_config_file': books_config_file, 
-        # 'paths_config_file': paths_config_file, 
+        'paths_config_file': paths_config_file, 
         'summary_config_file': summary_config_file
     }
 
@@ -38,15 +38,3 @@ def setup_paths_config():
 
 if __name__ == '__main__':
     setup_paths_config()
-
-"""
-todo: add a function that adds the paths to the paths config file
-    add the following folders to the paths config file
-    1. project root
-    2. project_root/data
-    3. project_root/configs
-    4. project_root/configs/audio.yml
-    5. project_root/configs/books.yml
-    6. project_root/configs/paths.yml
-    7. project_root/configs/summary.yml
-"""
