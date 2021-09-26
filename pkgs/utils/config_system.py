@@ -44,8 +44,7 @@ def load_summary_config(summary_config_path):
 
     return summary_dict
 
-""" 
-todo: add the following functions
-    > load_audio_config
-    > load_summary_config
+"""todo
+    > add a function to add a new book to the books.yml that gets the
+      information from scripts/setup_book.py
 """
