@@ -18,7 +18,7 @@ summary_dict = config_system.load_summary_config(paths_dict['summary_config_file
 # base url for the book webpage on project gutenberg
 BASE_URL = 'https://www.gutenberg.org/ebooks/'
 
-def store_webpage_content(book_id, html_content_file_path):
+def store_webpage_content(book_id:str, html_content_file_path:str):
     """
     Get the webpage html and store it in a file
     Args:
@@ -38,7 +38,7 @@ def store_webpage_content(book_id, html_content_file_path):
     with open(html_content_file_path, 'w') as file:
         file.write(str(webpage_html))
 
-def get_epub_and_raw(html_path, epub_file_path, raw_file_path):
+def get_epub_and_raw(html_path:str, epub_file_path:str, raw_file_path:str):
     """
     Get the epub and raw text format and store them
     Args:
@@ -48,11 +48,62 @@ def get_epub_and_raw(html_path, epub_file_path, raw_file_path):
     Returns:
         None
     """
+    BASE_EPUB_RAW_URL = 'https://www.gutenberg.org'
+    epub_url, raw_url = None, None
+
+    # parsing to find the epub url
     with open(html_path) as file:
         soup = BeautifulSoup(file, 'html.parser')
-        # print(soup.prettify())
+        download, link, epub = False, False, False
+        href = None
+        for a in soup.find_all('a'):
+            # print(a.get('title'), a.get('class'), a.text)
+            if a.get('title'):
+                if 'Download' in a.get('title'):
+                    download = True
+            if a.get('class'):
+                if 'link' in a.get('class'):
+                    link = True
+            if a.text:
+                if 'EPUB (no images)' in a.text:
+                    epub = True
+            if download and link and epub:
+                epub_url = BASE_EPUB_RAW_URL + a['href']
+                break
 
-def get_thumbnail(html_path, thumbnail_path):
+    if epub_url:
+        print('Saving epub')
+        command = f'wget -O {epub_file_path} {epub_url}'
+        os.system(command)
+
+    # parsing to find the raw url
+    with open(html_path) as file:
+        soup = BeautifulSoup(file, 'html.parser')
+        download, link, raw = False, False, False
+        href = None
+        for a in soup.find_all('a'):
+            # print(a.get('title'), a.get('class'), a.text)
+            if a.get('title'):
+                if 'Download' in a.get('title'):
+                    download = True
+            if a.get('class'):
+                if 'link' in a.get('class'):
+                    link = True
+            if a.text:
+                if 'Plain Text' in a.text:
+                    raw = True
+            if download and link and raw:
+                raw_url = BASE_EPUB_RAW_URL + a['href']
+                break
+
+    if raw_url:
+        print('Saving raw')
+        command = f'wget -O {raw_file_path} {raw_url}'
+        os.system(command)
+
+    # print(epub_url, raw_url)
+
+def get_thumbnail(html_path:str, thumbnail_path:str):
     """
     Get the thumbnail for the book
     Args:
@@ -74,7 +125,7 @@ def get_thumbnail(html_path, thumbnail_path):
         command = f'wget -O {thumbnail_path} {image_link}'
         os.system(command)
 
-def setup_book(book_id):
+def setup_book(book_id:str):
     """Makes a new directory for the new book and sets up the file paths"""
     # dictionaries to populate and store in the yml file at the end
     files_dict = dict()
@@ -94,7 +145,10 @@ def setup_book(book_id):
         print("Html file already downloaded, not downloading again, don't wanna get IP blocked")
 
     # getting the epub and raw text format 
-    get_epub_and_raw(book_id_html, book_id_epub_file, book_id_raw_file)
+    if not os.path.exists(book_id_epub_file):
+        get_epub_and_raw(book_id_html, book_id_epub_file, book_id_raw_file)
+    else:
+        print("raw and epub already downloaded, not downloading again, don't wanna get IP blocked")
 
     # getting the thumbnail
     if not os.path.exists(book_id_thumbnail):
