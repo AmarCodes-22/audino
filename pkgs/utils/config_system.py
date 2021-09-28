@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from pprint import pprint
 
 import yaml
 
@@ -43,6 +44,18 @@ def load_summary_config(summary_config_path):
         summary_dict = yaml.safe_load(file)
 
     return summary_dict
+
+def add_new_book(book_dict):
+    paths_dict = load_paths_config()
+    book_config_file = paths_dict['books_config_file']
+
+    # read the current content of the yaml file
+    # with open(book_config_file) as file:
+    #     books_dict = yaml.safe_load(file)
+    #     print(books_dict)
+
+    with open(book_config_file, 'a') as file:
+        yaml.safe_dump(book_dict, file)
 
 """todo
     > add a function to add a new book to the books.yml that gets the

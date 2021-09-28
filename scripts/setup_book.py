@@ -134,6 +134,13 @@ def get_thumbnail(html_path:str, thumbnail_path:str):
         os.system(command)
 
 def get_genre(html_path:str):
+    """
+    Get the genre 
+    Args:
+        html_path (str): path to the html page for the current book
+    Returns:
+        genre (str): predicted genre for the book
+    """
     subjects = list()
 
     # Getting the subjects
@@ -148,12 +155,12 @@ def get_genre(html_path:str):
                     curr_subject = curr_subject.replace('\n', '').replace('-', '').strip().lower()
                     subjects.append(curr_subject)
 
+    # Getting the most common subjects to be used as tags to determine the genre
     subjects_str = ' '.join(subjects)
     subjects_tokenized = word_tokenize(subjects_str)
     fdist = FreqDist(subjects_tokenized)
-    print(type(fdist))
-    print(fdist.most_common(2))
-    # print(subjects_tokenized)
+    genre = fdist.most_common(1)[0][0]
+    return genre
 
 def setup_book(book_id:str):
     """Makes a new directory for the new book and sets up the file paths"""
@@ -179,6 +186,8 @@ def setup_book(book_id:str):
         get_epub_and_raw(book_id_html, book_id_epub_file, book_id_raw_file)
     else:
         print("raw and epub already downloaded, not downloading again, don't wanna get IP blocked")
+    files_dict['epub'] = book_id_epub_file
+    files_dict['raw'] = book_id_raw_file
 
     # getting the thumbnail
     if not os.path.exists(book_id_thumbnail):
@@ -188,10 +197,32 @@ def setup_book(book_id:str):
     files_dict['thumbnail'] = book_id_thumbnail
 
     # Getting the genre
-    get_genre(book_id_html)
+    genre = get_genre(book_id_html)
+    files_dict['genre'] = genre
+
+    # Initializing the meta data dict
+    meta_data_dict['Title'] = None 
+    meta_data_dict['Author'] = None 
+    meta_data_dict['Thumbnail_url'] = None 
+    meta_data_dict['Genre'] = None 
+    meta_data_dict['Description'] = None 
+    meta_data_dict['SummaryText'] = None 
+    meta_data_dict['AudioUrl'] = None
+
+    # pprint(files_dict)
+    # pprint(meta_data_dict)
+
+    final_dict = {
+        book_id: {
+            'files': files_dict,
+            'meta_data': meta_data_dict
+        }
+    }
+
+    config_system.add_new_book(final_dict)
 
 def main():
-    parser = argparse.ArgumentParser(description='try to print out the book id')
+    parser = argparse.ArgumentParser(description='setup the books.yml config for the bookid provided')
     parser.add_argument(
         '--bookid',
         dest='book_id',
@@ -206,7 +237,6 @@ if __name__ == '__main__':
     main()
 
 """todo
-    > add a function to get the genre
-    > add a function to add the book to the books.yml file
+    > add a function to add the information to the books.yml file
 
 """
