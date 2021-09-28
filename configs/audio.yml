@@ -1,7 +1,0 @@
-# config for audio data 
-# template
-# book_id (str):
-#   'depth_1': path_to_audio_file generated from depth_1 summary stored in project_root/data/book_id/audio/depth_1.mp3
-#   'depth_1_url': google drive url
-#   'depth_2': path_to_audio_file generated from depth_2 summary stored in project_root/data/book_id/audio/depth_2.mp3
-#   'depth_2_url': google drive url

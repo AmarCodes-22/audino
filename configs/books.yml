@@ -1,8 +1,10 @@
 '6130':
   files:
+    audio: null
     epub: /home/amar/projects/audino/data/6130/6130.epub
     genre: poetry
     raw: /home/amar/projects/audino/data/6130/6130.txt
+    summary: null
     thumbnail: /home/amar/projects/audino/data/6130/6130.jpg
   meta_data:
     AudioUrl: null
@@ -14,9 +16,11 @@
     Title: null
 '84':
   files:
+    audio: null
     epub: /home/amar/projects/audino/data/84/84.epub
     genre: fiction
     raw: /home/amar/projects/audino/data/84/84.txt
+    summary: null
     thumbnail: /home/amar/projects/audino/data/84/84.jpg
   meta_data:
     AudioUrl: null

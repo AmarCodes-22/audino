@@ -200,6 +200,10 @@ def setup_book(book_id:str):
     genre = get_genre(book_id_html)
     files_dict['genre'] = genre
 
+    # adding summary and audio to books.yml
+    files_dict['audio'] = None 
+    files_dict['summary'] = None
+
     # Initializing the meta data dict
     meta_data_dict['Title'] = None 
     meta_data_dict['Author'] = None 
