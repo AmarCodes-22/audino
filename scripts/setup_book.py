@@ -4,10 +4,16 @@ from pprint import pprint
 import sys
 
 from bs4 import BeautifulSoup
+from nltk import FreqDist
+import nltk
 import requests
+from nltk.tokenize import word_tokenize
 import yaml
 
 from pkgs.utils import config_system
+
+# punkt download (one time download)
+# nltk.download('punkt')
 
 # load the configs into respective dicts
 paths_dict = config_system.load_paths_config()
@@ -35,6 +41,7 @@ def store_webpage_content(book_id:str, html_content_file_path:str):
     os.makedirs(os.path.dirname(html_content_file_path), exist_ok=True)
 
     # storing the webpage content in a file
+    print('Storing html')
     with open(html_content_file_path, 'w') as file:
         file.write(str(webpage_html))
 
@@ -122,8 +129,31 @@ def get_thumbnail(html_path:str, thumbnail_path:str):
                 image_link = image.get('src')
 
         # saving the file 
+        print('Saving thumbnail')
         command = f'wget -O {thumbnail_path} {image_link}'
         os.system(command)
+
+def get_genre(html_path:str):
+    subjects = list()
+
+    # Getting the subjects
+    with open(html_path) as file:
+        soup = BeautifulSoup(file, 'html.parser')
+        table_rows = soup.find_all('tr')
+        for row in table_rows:
+            headers = row.findChildren(['th'])
+            for header in headers:
+                if header.text == 'Subject':
+                    curr_subject = row.td.text
+                    curr_subject = curr_subject.replace('\n', '').replace('-', '').strip().lower()
+                    subjects.append(curr_subject)
+
+    subjects_str = ' '.join(subjects)
+    subjects_tokenized = word_tokenize(subjects_str)
+    fdist = FreqDist(subjects_tokenized)
+    print(type(fdist))
+    print(fdist.most_common(2))
+    # print(subjects_tokenized)
 
 def setup_book(book_id:str):
     """Makes a new directory for the new book and sets up the file paths"""
@@ -152,10 +182,13 @@ def setup_book(book_id:str):
 
     # getting the thumbnail
     if not os.path.exists(book_id_thumbnail):
-        get_thumbnail(book_id, book_id_html, book_id_thumbnail)
+        get_thumbnail(book_id_html, book_id_thumbnail)
     else:
         print("Thumbnail already exists, not downloading again, don't wanna get IP blocked")
     files_dict['thumbnail'] = book_id_thumbnail
+
+    # Getting the genre
+    get_genre(book_id_html)
 
 def main():
     parser = argparse.ArgumentParser(description='try to print out the book id')
@@ -173,9 +206,6 @@ if __name__ == '__main__':
     main()
 
 """todo
-    > add a function to download the epub and raw text and put it inside data/book_id/ 
-        > book_id 84
-    > add a function to get the thumbnail 
     > add a function to get the genre
     > add a function to add the book to the books.yml file
 
