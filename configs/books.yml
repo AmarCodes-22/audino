@@ -9,8 +9,8 @@
     Author: null
     Description: null
     Genre: null
-    SummaryText: null
-    Thumbnail_url: null
+    SummaryUrl: null
+    ThumbnailUrl: null
     Title: null
 '84':
   files:
@@ -23,6 +23,6 @@
     Author: null
     Description: null
     Genre: null
-    SummaryText: null
-    Thumbnail_url: null
+    SummaryUrl: null
+    ThumbnailUrl: null
     Title: null

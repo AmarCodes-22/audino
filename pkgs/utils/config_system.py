@@ -50,14 +50,13 @@ def add_new_book(book_dict):
     book_config_file = paths_dict['books_config_file']
 
     # read the current content of the yaml file
-    # with open(book_config_file) as file:
-    #     books_dict = yaml.safe_load(file)
-    #     print(books_dict)
+    with open(book_config_file) as file:
+        curr_dict = yaml.safe_load(file)
+        # print(books_dict)
 
-    with open(book_config_file, 'a') as file:
-        yaml.safe_dump(book_dict, file)
-
-"""todo
-    > add a function to add a new book to the books.yml that gets the
-      information from scripts/setup_book.py
-"""
+    with open(book_config_file, 'w') as file:
+        if curr_dict:
+            curr_dict.update(book_dict)
+            yaml.safe_dump(curr_dict, file)
+        else:
+            yaml.safe_dump(book_dict, file)

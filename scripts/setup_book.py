@@ -203,10 +203,10 @@ def setup_book(book_id:str):
     # Initializing the meta data dict
     meta_data_dict['Title'] = None 
     meta_data_dict['Author'] = None 
-    meta_data_dict['Thumbnail_url'] = None 
+    meta_data_dict['ThumbnailUrl'] = None 
     meta_data_dict['Genre'] = None 
     meta_data_dict['Description'] = None 
-    meta_data_dict['SummaryText'] = None 
+    meta_data_dict['SummaryUrl'] = None 
     meta_data_dict['AudioUrl'] = None
 
     # pprint(files_dict)
@@ -235,8 +235,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-"""todo
-    > add a function to add the information to the books.yml file
-
-"""
