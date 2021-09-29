@@ -18,8 +18,8 @@ from pkgs.utils import config_system
 # load the configs into respective dicts
 paths_dict = config_system.load_paths_config()
 books_dict = config_system.load_books_config(paths_dict['books_config_file'])
-audio_dict = config_system.load_audio_config(paths_dict['audio_config_file'])
-summary_dict = config_system.load_summary_config(paths_dict['summary_config_file'])
+# audio_dict = config_system.load_audio_config(paths_dict['audio_config_file'])
+# summary_dict = config_system.load_summary_config(paths_dict['summary_config_file'])
 
 # base url for the book webpage on project gutenberg
 BASE_URL = 'https://www.gutenberg.org/ebooks/'
@@ -198,7 +198,7 @@ def setup_book(book_id:str):
 
     # Getting the genre
     genre = get_genre(book_id_html)
-    files_dict['genre'] = genre
+    meta_data_dict['Genre'] = genre
 
     # adding summary and audio to books.yml
     files_dict['audio'] = None 
@@ -208,7 +208,7 @@ def setup_book(book_id:str):
     meta_data_dict['Title'] = None 
     meta_data_dict['Author'] = None 
     meta_data_dict['ThumbnailUrl'] = None 
-    meta_data_dict['Genre'] = None 
+    # meta_data_dict['Genre'] = None 
     meta_data_dict['Description'] = None 
     meta_data_dict['SummaryUrl'] = None 
     meta_data_dict['AudioUrl'] = None

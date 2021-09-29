@@ -2,31 +2,29 @@
   files:
     audio: null
     epub: /home/amar/projects/audino/data/6130/6130.epub
-    genre: poetry
     raw: /home/amar/projects/audino/data/6130/6130.txt
-    summary: null
+    summary: /home/amar/projects/audino/data/6130/summary_20.txt
     thumbnail: /home/amar/projects/audino/data/6130/6130.jpg
   meta_data:
     AudioUrl: null
-    Author: null
+    Author: Homer
     Description: null
-    Genre: null
+    Genre: poetry
     SummaryUrl: null
     ThumbnailUrl: null
-    Title: null
+    Title: The Iliad
 '84':
   files:
     audio: null
     epub: /home/amar/projects/audino/data/84/84.epub
-    genre: fiction
     raw: /home/amar/projects/audino/data/84/84.txt
-    summary: null
+    summary: /home/amar/projects/audino/data/84/summary_20.txt
     thumbnail: /home/amar/projects/audino/data/84/84.jpg
   meta_data:
     AudioUrl: null
-    Author: null
+    Author: Mary Wollstonecraft Shelley
     Description: null
-    Genre: null
+    Genre: fiction
     SummaryUrl: null
     ThumbnailUrl: null
-    Title: null
+    Title: Frankenstein; Or, The Modern Prometheus
