@@ -15,7 +15,7 @@
     Title: The Iliad
 '84':
   files:
-    audio: null
+    audio: /home/amar/projects/audino/data/84/audio_20.mp3
     epub: /home/amar/projects/audino/data/84/84.epub
     raw: /home/amar/projects/audino/data/84/84.txt
     summary: /home/amar/projects/audino/data/84/summary_20.txt
