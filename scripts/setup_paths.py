@@ -17,6 +17,7 @@ def setup_paths_config():
     books_config_file = os.path.join(configs_dir, 'books.yml')
     paths_config_file = os.path.join(configs_dir, 'paths.yml')
     summary_config_file = os.path.join(configs_dir, 'summary.yml')
+    firebase_config_file = os.path.join(configs_dir, 'firebase.yml')
 
     paths = {
         'project_root': project_root_dir, 
@@ -25,7 +26,8 @@ def setup_paths_config():
         'audio_config_file': audio_config_file, 
         'books_config_file': books_config_file, 
         'paths_config_file': paths_config_file, 
-        'summary_config_file': summary_config_file
+        'summary_config_file': summary_config_file, 
+        'firebase_config_file': firebase_config_file
     }
 
     with open(paths_config_file, 'w') as file:
@@ -34,7 +36,6 @@ def setup_paths_config():
     with open(paths_config_file) as file:
         paths_dict = yaml.safe_load(file)
         pprint(paths_dict)
-
 
 if __name__ == '__main__':
     setup_paths_config()
