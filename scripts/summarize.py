@@ -126,7 +126,8 @@ def summarize(book_id:str):
         json_file = open(summary_json, 'w')
         json.dump(summary_text_dict, json_file, indent=4)
         json_file.close()
-        books_dict[book_id]['files']['summary'] = summary_path
+
+        books_dict[book_id]['files']['summary'] = summary_json
         config_system.add_new_book(books_dict)
 
 def main():

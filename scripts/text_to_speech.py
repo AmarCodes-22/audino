@@ -48,9 +48,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-"""todo
-> Get the summary from the .txt file
-> Use gtts to get the audio and store it in data/
-> Add the audio file path to books.yml
-"""
