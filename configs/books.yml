@@ -21,10 +21,10 @@
     summary: /home/amar/projects/audino/data/84/summary_20.json
     thumbnail: /home/amar/projects/audino/data/84/84.jpg
   meta_data:
-    AudioUrl: https://drive.google.com/file/d/1N4TrajNlZ9Z7vxPkQ8W8on4btbT_nYpF
+    AudioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/84%2Faudio_20.mp3?alt=media
     Author: Mary Wollstonecraft Shelley
     Description: null
     Genre: fiction
-    SummaryUrl: https://drive.google.com/file/d/1UVm-5keDlzSOggTHRzATDm9K1k4-YUOq
-    ThumbnailUrl: https://drive.google.com/file/d/19XCAWqKjjCEwkziFfNSiYSIxigaAz7o7
+    SummaryUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/84%2Fsummary_20.json?alt=media
+    ThumbnailUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/84%2F84.jpg?alt=media
     Title: Frankenstein; Or, The Modern Prometheus

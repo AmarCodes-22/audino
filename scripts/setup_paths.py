@@ -17,7 +17,7 @@ def setup_paths_config():
     books_config_file = os.path.join(configs_dir, 'books.yml')
     paths_config_file = os.path.join(configs_dir, 'paths.yml')
     summary_config_file = os.path.join(configs_dir, 'summary.yml')
-    firebase_config_file = os.path.join(configs_dir, 'firebase.yml')
+    firebase_config_file = os.path.join(configs_dir, 'firebase_config.yml')
 
     paths = {
         'project_root': project_root_dir, 

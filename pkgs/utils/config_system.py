@@ -60,3 +60,11 @@ def add_new_book(book_dict):
             yaml.safe_dump(curr_dict, file)
         else:
             yaml.safe_dump(book_dict, file)
+
+def load_firebase_config(firebase_config_path):
+    """ Loads firebase config and returns it as a dictionary """
+
+    with open(firebase_config_path) as file:
+        firebase_config_dict = yaml.safe_load(file)
+
+    return firebase_config_dict

@@ -131,7 +131,7 @@ def upload(book_id:str):
 
     final_dict = dict()
     final_dict = books_dict[book_id]['meta_data']
-    final_dict_path = os.path.join(paths_dict['data_dir'], book_id, 'final.json')
+    final_dict_path = os.path.join(paths_dict['data_dir'], book_id, 'final_drive.json')
     with open(final_dict_path, 'w') as file:
         json.dump(final_dict, file, indent=4)
     pprint(final_dict)
