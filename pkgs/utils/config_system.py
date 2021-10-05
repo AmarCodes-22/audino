@@ -45,7 +45,7 @@ def load_summary_config(summary_config_path):
 
     return summary_dict
 
-def add_new_book(book_dict):
+def update_books(book_dict):
     paths_dict = load_paths_config()
     book_config_file = paths_dict['books_config_file']
 

@@ -2,17 +2,19 @@
   files:
     audio: null
     epub: /home/amar/projects/audino/data/6130/6130.epub
+    html: /home/amar/projects/audino/data/6130/6130.html
     raw: /home/amar/projects/audino/data/6130/6130.txt
-    summary: /home/amar/projects/audino/data/6130/summary_20.txt
+    summary_json: null
+    summary_text: null
     thumbnail: /home/amar/projects/audino/data/6130/6130.jpg
-  meta_data:
+  meta:
     AudioUrl: null
-    Author: Homer
+    Author: null
     Description: null
-    Genre: poetry
+    Genre: Poetry
     SummaryUrl: null
     ThumbnailUrl: null
-    Title: The Iliad
+    Title: null
 '84':
   files:
     audio: /home/amar/projects/audino/data/84/audio_20.mp3

@@ -1,232 +1,216 @@
 import argparse
 import os
 from pprint import pprint
-import sys
 
 from bs4 import BeautifulSoup
 from nltk import FreqDist
-import nltk
 import requests
 from nltk.tokenize import word_tokenize
-import yaml
+from requests.api import head
 
 from pkgs.utils import config_system
 
 # punkt download (one time download)
 # nltk.download('punkt')
 
-# load the configs into respective dicts
-paths_dict = config_system.load_paths_config()
-books_dict = config_system.load_books_config(paths_dict['books_config_file'])
-# audio_dict = config_system.load_audio_config(paths_dict['audio_config_file'])
-# summary_dict = config_system.load_summary_config(paths_dict['summary_config_file'])
+class Book():
+    def __init__(self, paths:dict, files_dict:dict, meta_dict:dict, book_id:str):
+        self.book_id = book_id
+        self.dir = os.path.join(paths['data_dir'], book_id)
+        self.BASE_EBOOK_URL = 'https://www.gutenberg.org/ebooks/'
+        self.html_file_path = os.path.join(self.dir, book_id + '.html')
+        self.thumbnail_file_path = os.path.join(self.dir, book_id + '.jpg')
+        self.epub_file_path = os.path.join(self.dir, book_id + '.epub')
+        self.raw_file_path = os.path.join(self.dir, book_id + '.txt')
+        self.files_dict = files_dict
+        self.meta_dict = meta_dict
+        print(f'Book id: {self.book_id}')
 
-# base url for the book webpage on project gutenberg
-BASE_URL = 'https://www.gutenberg.org/ebooks/'
+    def store_html_file(self):
+        """ Get the webpage html and store it in a file """
+        if os.path.exists(self.html_file_path):
+            print(f'Html file already saved: {self.html_file_path}')
+            self.files_dict['html'] = self.html_file_path
+            
+        else:
+            # getting the webpage html
+            res = requests.get(self.BASE_EBOOK_URL + self.book_id)
+            webpage_html = BeautifulSoup(res.content, 'html.parser')
 
-def store_webpage_content(book_id:str, html_content_file_path:str):
-    """
-    Get the webpage html and store it in a file
-    Args:
-        book_id (str): unique id used to get the html
-        html_content_file_path (str): path to store the html file in
-    Returns:
-        None
-    """
-    # getting the webpage html
-    res = requests.get(BASE_URL + book_id)
-    webpage_html = BeautifulSoup(res.content, 'html.parser')
+            # make directories if they don't exist
+            os.makedirs(os.path.dirname(self.html_file_path), exist_ok=True)
 
-    # make directories if they don't exist
-    os.makedirs(os.path.dirname(html_content_file_path), exist_ok=True)
+            # storing the webpage content in a file
+            print('Storing html')
+            with open(self.html_file_path, 'w') as file:
+                file.write(str(webpage_html))
+            self.files_dict['html'] = self.html_file_path
+            print(f'HTML file stored at: {self.html_file_path}')
 
-    # storing the webpage content in a file
-    print('Storing html')
-    with open(html_content_file_path, 'w') as file:
-        file.write(str(webpage_html))
+    def store_epub(self):
+        """ Get the epub text format and store it """
+        if os.path.exists(self.epub_file_path):
+            print(f'Epub file already saved: {self.epub_file_path}')
+            self.files_dict['epub'] = self.epub_file_path
+        else:
+            BASE_URL = 'https://www.gutenberg.org'
+            epub_url = None
+            download, link, epub = False, False, False
+            with open(self.html_file_path) as file:
+                soup = BeautifulSoup(file, 'html.parser')
+                for a in soup.find_all('a'):
+                    if a.get('title'):
+                        if 'Download' in a.get('title'):
+                            download = True
+                    if a.get('class'):
+                        if 'link' in a.get('class'):
+                            link = True
+                    if a.text:
+                        if 'EPUB (no images)' in a.text:
+                            epub = True
+                    if download and link and epub:
+                        epub_url = BASE_URL + a['href']
 
-def get_epub_and_raw(html_path:str, epub_file_path:str, raw_file_path:str):
-    """
-    Get the epub and raw text format and store them
-    Args:
-        html_path (str): path to the html content for the current book_id
-        epub_file_path (str): path to store the epub file
-        raw_file_path (str): path to store the raw file
-    Returns:
-        None
-    """
-    BASE_EPUB_RAW_URL = 'https://www.gutenberg.org'
-    epub_url, raw_url = None, None
+            if epub_url:
+                print('Saving epub')
+                command = f'wget -O {self.epub_file_path} {epub_url}'
+                os.system(command)
+                self.files_dict['epub'] = self.epub_file_path
+                print(f'Epub file stored at: {self.epub_file_path}')
 
-    # parsing to find the epub url
-    with open(html_path) as file:
-        soup = BeautifulSoup(file, 'html.parser')
-        download, link, epub = False, False, False
-        href = None
-        for a in soup.find_all('a'):
-            # print(a.get('title'), a.get('class'), a.text)
-            if a.get('title'):
-                if 'Download' in a.get('title'):
-                    download = True
-            if a.get('class'):
-                if 'link' in a.get('class'):
-                    link = True
-            if a.text:
-                if 'EPUB (no images)' in a.text:
-                    epub = True
-            if download and link and epub:
-                epub_url = BASE_EPUB_RAW_URL + a['href']
-                break
+    def store_raw(self):
+        """ Get the raw text format and save it """
+        if os.path.exists(self.raw_file_path):
+            print(f'Raw file already saved: {self.raw_file_path}')
+            self.files_dict['raw'] = self.raw_file_path
+        else:
+            BASE_URL = 'https://www.gutenberg.org'
+            raw_url = None
+            download, link, raw = False, False, False
+            with open(self.html_file_path) as file:
+                soup = BeautifulSoup(file, 'html.parser')
+                for a in soup.find_all('a'):
+                    if a.get('title'):
+                        if 'Download' in a.get('title'):
+                            download = True
+                    if a.get('class'):
+                        if 'link' in a.get('class'):
+                            link = True
+                    if a.text:
+                        if 'Plain Text' in a.text:
+                            raw = True
+                    if download and link and raw:
+                        raw_url = BASE_URL + a['href']
 
-    if epub_url:
-        print('Saving epub')
-        command = f'wget -O {epub_file_path} {epub_url}'
-        os.system(command)
+            if raw_url:
+                print('Saving epub')
+                command = f'wget -O {self.raw_file_path} {raw_url}'
+                os.system(command)
+                self.files_dict['raw'] = self.raw_file_path
+                print(f'Raw file stored at: {self.raw_file_path}')
 
-    # parsing to find the raw url
-    with open(html_path) as file:
-        soup = BeautifulSoup(file, 'html.parser')
-        download, link, raw = False, False, False
-        href = None
-        for a in soup.find_all('a'):
-            # print(a.get('title'), a.get('class'), a.text)
-            if a.get('title'):
-                if 'Download' in a.get('title'):
-                    download = True
-            if a.get('class'):
-                if 'link' in a.get('class'):
-                    link = True
-            if a.text:
-                if 'Plain Text' in a.text:
-                    raw = True
-            if download and link and raw:
-                raw_url = BASE_EPUB_RAW_URL + a['href']
-                break
+    def store_thumbnail(self):
+        """ Get the thumbnail for the book """
+        if os.path.exists(self.thumbnail_file_path):
+            print(f'Thumbnail already saved: {self.thumbnail_file_path}')
+            self.files_dict['thumbnail'] = self.thumbnail_file_path
+        else:
+            with open(self.html_file_path) as file:
+                soup = BeautifulSoup(file, 'html.parser')
+                image_url = None
 
-    if raw_url:
-        print('Saving raw')
-        command = f'wget -O {raw_file_path} {raw_url}'
-        os.system(command)
+                # finding the thumbnail url
+                for image in soup.find_all('img'):
+                    if image.get('title') == 'Book Cover':
+                        image_url = image.get('src')
 
-    # print(epub_url, raw_url)
+                # saving the file
+                if image_url:
+                    print('Saving thumbnail')
+                    command = f'wget -O {self.thumbnail_file_path} {image_url}'
+                    os.system(command)
+                    self.files_dict['thumbnail'] = self.thumbnail_file_path
+                    print(f'Thumbnail stored at: {self.thumbnail_file_path}')
 
-def get_thumbnail(html_path:str, thumbnail_path:str):
-    """
-    Get the thumbnail for the book
-    Args:
-        html_path (str): path to html content for the current book_id
-        thumbnail_path (str): path to store the thumbnail
-    Returns:
-        None
-    """
-    with open(html_path) as file:
-        soup = BeautifulSoup(file, 'html.parser')
-        image_link = None
+    def get_genre(self):
+        """ Get the genre """
+        subjects = list()
+        # Getting the subjects
+        with open(self.html_file_path) as file:
+            soup = BeautifulSoup(file, 'html.parser')
+            table_rows = soup.find_all('tr')
+            for row in table_rows:
+                headers = row.findChildren(['th'])
+                for header in headers:
+                    if header.text == 'Subject':
+                        curr_subject = row.td.text
+                        for char in ['\n', '-']:
+                            curr_subject = curr_subject.replace(char, '')
+                        curr_subject.strip().lower()
+                        subjects.append(curr_subject)
 
-        # find the thumbnail url
-        for image in soup.find_all('img'):
-            if image.get('title') == 'Book Cover':
-                image_link = image.get('src')
+        # Getting the most common subjects to be used as tags
+        subjects_str = ' '.join(subjects)
+        subjects_tokenized = word_tokenize(subjects_str)
+        fdist = FreqDist(subjects_tokenized)
+        genre = fdist.most_common(1)[0][0]
+        self.meta_dict['Genre'] = genre
 
-        # saving the file 
-        print('Saving thumbnail')
-        command = f'wget -O {thumbnail_path} {image_link}'
-        os.system(command)
-
-def get_genre(html_path:str):
-    """
-    Get the genre 
-    Args:
-        html_path (str): path to the html page for the current book
-    Returns:
-        genre (str): predicted genre for the book
-    """
-    subjects = list()
-
-    # Getting the subjects
-    with open(html_path) as file:
-        soup = BeautifulSoup(file, 'html.parser')
-        table_rows = soup.find_all('tr')
-        for row in table_rows:
-            headers = row.findChildren(['th'])
-            for header in headers:
-                if header.text == 'Subject':
-                    curr_subject = row.td.text
-                    curr_subject = curr_subject.replace('\n', '').replace('-', '').strip().lower()
-                    subjects.append(curr_subject)
-
-    # Getting the most common subjects to be used as tags to determine the genre
-    subjects_str = ' '.join(subjects)
-    subjects_tokenized = word_tokenize(subjects_str)
-    fdist = FreqDist(subjects_tokenized)
-    genre = fdist.most_common(1)[0][0]
-    return genre
+    def get_book_config(self):
+        return self.files_dict, self.meta_dict
 
 def setup_book(book_id:str):
     """Makes a new directory for the new book and sets up the file paths"""
-    # dictionaries to populate and store in the yml file at the end
+
+    # Load the configs 
+    paths_dict = config_system.load_paths_config()
+
+    # Initialize the dicts
     files_dict = dict()
-    meta_data_dict = dict()
+    meta_dict = dict()
 
-    # Sets up the book_id directory and the file paths 
-    book_id_dir = os.path.join(paths_dict['data_dir'], book_id)
-    book_id_epub_file = os.path.join(book_id_dir, book_id + '.epub')
-    book_id_raw_file = os.path.join(book_id_dir, book_id + '.txt')
-    book_id_thumbnail = os.path.join(book_id_dir, book_id + '.jpg')
-    book_id_html = os.path.join(book_id_dir, book_id + '.html')
+    book = Book(paths_dict, files_dict, meta_dict, book_id)
 
-    # getting the html content
-    if not os.path.exists(book_id_html):
-        store_webpage_content(book_id, book_id_html)
-    else:
-        print("Html file already downloaded, not downloading again, don't wanna get IP blocked")
+    book.store_html_file()
 
-    # getting the epub and raw text format 
-    if not os.path.exists(book_id_epub_file):
-        get_epub_and_raw(book_id_html, book_id_epub_file, book_id_raw_file)
-    else:
-        print("raw and epub already downloaded, not downloading again, don't wanna get IP blocked")
-    files_dict['epub'] = book_id_epub_file
-    files_dict['raw'] = book_id_raw_file
+    book.store_raw()
 
-    # getting the thumbnail
-    if not os.path.exists(book_id_thumbnail):
-        get_thumbnail(book_id_html, book_id_thumbnail)
-    else:
-        print("Thumbnail already exists, not downloading again, don't wanna get IP blocked")
-    files_dict['thumbnail'] = book_id_thumbnail
+    book.store_epub()
 
-    # Getting the genre
-    genre = get_genre(book_id_html)
-    meta_data_dict['Genre'] = genre
+    book.store_thumbnail()
 
-    # adding summary and audio to books.yml
-    files_dict['audio'] = None 
-    files_dict['summary'] = None
+    book.get_genre()
 
-    # Initializing the meta data dict
-    meta_data_dict['Title'] = None 
-    meta_data_dict['Author'] = None 
-    meta_data_dict['ThumbnailUrl'] = None 
-    # meta_data_dict['Genre'] = None 
-    meta_data_dict['Description'] = None 
-    meta_data_dict['SummaryUrl'] = None 
-    meta_data_dict['AudioUrl'] = None
+    # dictionaries to populate and store in the yml file at the end
+    files_dict, meta_dict = book.get_book_config()
 
-    # pprint(files_dict)
-    # pprint(meta_data_dict)
+    # initialize the files dict
+    files_dict['audio'] = None
+    files_dict['summary_json'] = None
+    files_dict['summary_text'] = None
+    pprint(files_dict)
+
+    meta_dict['Title'] = None 
+    meta_dict['Author'] = None 
+    meta_dict['ThumbnailUrl'] = None 
+    meta_dict['Description'] = None 
+    meta_dict['SummaryUrl'] = None 
+    meta_dict['AudioUrl'] = None
+    pprint(meta_dict)
 
     final_dict = {
         book_id: {
             'files': files_dict,
-            'meta_data': meta_data_dict
+            'meta': meta_dict
         }
     }
 
-    config_system.add_new_book(final_dict)
+    config_system.update_books(final_dict)
 
 def main():
-    parser = argparse.ArgumentParser(description='setup the books.yml config for the bookid provided')
+    parser = argparse.ArgumentParser(
+        description='Add new book data to the books.yml file'
+    )
     parser.add_argument(
         '--bookid',
         dest='book_id',
