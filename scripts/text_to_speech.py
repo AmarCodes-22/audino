@@ -13,24 +13,26 @@ books_dict = config_system.load_books_config(paths_dict['books_config_file'])
 def tts(book_id:str):
     """ Get the audio for the summary of the book-id provided """
     # Get the summary file content
-    summary_file_path = books_dict[book_id]['files']['summary']
+    summary_file_path = books_dict[book_id]['files']['summary_text']
+    ratio = summary_file_path.split('/')[-1][8:11]
     summary_file = open(summary_file_path)
     summary_file_content = summary_file.read()
 
-    audio_obj_path = os.path.join(paths_dict['data_dir'], book_id, 'audio_20.mp3')
+    audio_obj_path = os.path.join(paths_dict['data_dir'], book_id, 'audio_'+ratio+'.mp3')
     if not os.path.exists(audio_obj_path):
         # Get the audio
         language='en'
         print('Started conversion')
         audio_obj = gTTS(text=summary_file_content, lang=language, slow=False)
 
-        # Store the audio
-        audio_obj.save(audio_obj_path)
-        print('Conversion finished')
-
-        # Add the audio to books.yml
-        books_dict[book_id]['files']['audio'] = audio_obj_path
-        config_system.add_new_book(books_dict)
+        try:
+            # Store the audio
+            audio_obj.save(audio_obj_path)
+            print('Conversion finished')
+        except:
+            # Add the audio to books.yml
+            books_dict[book_id]['files']['audio'] = audio_obj_path
+            config_system.update_books(books_dict)
     else:
         print('Audio file for this book already exists')
 

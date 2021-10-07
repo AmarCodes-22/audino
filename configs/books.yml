@@ -1,6 +1,6 @@
 '6130':
   files:
-    audio: null
+    audio: /home/amar/projects/audino/data/6130/audio_0.1.mp3
     epub: /home/amar/projects/audino/data/6130/6130.epub
     html: /home/amar/projects/audino/data/6130/6130.html
     raw: /home/amar/projects/audino/data/6130/6130.txt
@@ -8,12 +8,12 @@
     summary_text: /home/amar/projects/audino/data/6130/summary_0.1.txt
     thumbnail: /home/amar/projects/audino/data/6130/6130.jpg
   meta:
-    AudioUrl: null
+    AudioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/6130%2Faudio_0.1.mp3?alt=media
     Author: Homer
     Description: null
     Genre: Poetry
-    SummaryUrl: null
-    ThumbnailUrl: null
+    SummaryUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/6130%2Fsummary_0.1.json?alt=media
+    ThumbnailUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/6130%2F6130.jpg?alt=media
     Title: The Iliad
 '84':
   files:

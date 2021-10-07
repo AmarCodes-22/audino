@@ -18,7 +18,7 @@ def upload(book_id:str):
 
     # Get files to upload
     audio_file = books_dict[book_id]['files']['audio']
-    summary_file = books_dict[book_id]['files']['summary']
+    summary_file = books_dict[book_id]['files']['summary_json']
     thumbnail_file = books_dict[book_id]['files']['thumbnail']
 
     # Upload audio
@@ -26,25 +26,25 @@ def upload(book_id:str):
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
     firebase_url = storage.child(cloud_filename).get_url(None)
-    books_dict[book_id]['meta_data']['AudioUrl'] = firebase_url
+    books_dict[book_id]['meta']['AudioUrl'] = firebase_url
 
     # Upload summary
     local_filename = summary_file
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
     firebase_url = storage.child(cloud_filename).get_url(None)
-    books_dict[book_id]['meta_data']['SummaryUrl'] = firebase_url
+    books_dict[book_id]['meta']['SummaryUrl'] = firebase_url
 
     # Upload thumbnail
     local_filename = thumbnail_file
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
     firebase_url = storage.child(cloud_filename).get_url(None)
-    books_dict[book_id]['meta_data']['ThumbnailUrl'] = firebase_url
+    books_dict[book_id]['meta']['ThumbnailUrl'] = firebase_url
 
-    config_system.add_new_book(books_dict)
+    config_system.update_books(books_dict)
 
-    final_dict = books_dict[book_id]['meta_data']
+    final_dict = books_dict[book_id]['meta']
     # Later send this with the post api
     pprint(final_dict)
 
