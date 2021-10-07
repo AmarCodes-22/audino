@@ -1,5 +1,4 @@
 import argparse
-import os
 from pprint import pprint
 
 from pkgs.utils import config_system
@@ -26,28 +25,22 @@ def upload(book_id:str):
     local_filename = audio_file
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
-
     firebase_url = storage.child(cloud_filename).get_url(None)
     books_dict[book_id]['meta_data']['AudioUrl'] = firebase_url
-    print(firebase_url)
 
     # Upload summary
     local_filename = summary_file
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
-
     firebase_url = storage.child(cloud_filename).get_url(None)
     books_dict[book_id]['meta_data']['SummaryUrl'] = firebase_url
-    print(firebase_url)
 
     # Upload thumbnail
     local_filename = thumbnail_file
     cloud_filename = book_id + '/' + local_filename.split('/')[-1]
     storage.child(cloud_filename).put(local_filename)
-
     firebase_url = storage.child(cloud_filename).get_url(None)
     books_dict[book_id]['meta_data']['ThumbnailUrl'] = firebase_url
-    print(firebase_url)
 
     config_system.add_new_book(books_dict)
 

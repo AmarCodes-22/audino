@@ -10,7 +10,7 @@ from requests.api import head
 
 from pkgs.utils import config_system
 
-# punkt download (one time download)
+# punkt download (one time only)
 # nltk.download('punkt')
 
 class Book():
@@ -69,7 +69,9 @@ class Book():
                         if 'EPUB (no images)' in a.text:
                             epub = True
                     if download and link and epub:
+                        print(a)
                         epub_url = BASE_URL + a['href']
+                        break
 
             if epub_url:
                 print('Saving epub')
@@ -101,6 +103,7 @@ class Book():
                             raw = True
                     if download and link and raw:
                         raw_url = BASE_URL + a['href']
+                        break
 
             if raw_url:
                 print('Saving epub')
@@ -170,15 +173,10 @@ def setup_book(book_id:str):
     meta_dict = dict()
 
     book = Book(paths_dict, files_dict, meta_dict, book_id)
-
     book.store_html_file()
-
     book.store_raw()
-
     book.store_epub()
-
     book.store_thumbnail()
-
     book.get_genre()
 
     # dictionaries to populate and store in the yml file at the end

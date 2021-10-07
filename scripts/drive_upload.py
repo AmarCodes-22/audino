@@ -153,10 +153,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-"""todo
-> Make the bookid folder on drive and upload the files inside it
-> Upload the files to google-drive and print out the link(s)
-
-"""
-
