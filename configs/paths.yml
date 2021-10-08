@@ -2,6 +2,7 @@ audio_config_file: /home/amar/projects/audino/configs/audio.yml
 books_config_file: /home/amar/projects/audino/configs/books.yml
 configs_dir: /home/amar/projects/audino/configs
 data_dir: /home/amar/projects/audino/data
+datasets_dir: /home/amar/projects/audino/datasets
 firebase_config_file: /home/amar/projects/audino/configs/firebase_config.yml
 paths_config_file: /home/amar/projects/audino/configs/paths.yml
 project_root: /home/amar/projects/audino

@@ -48,17 +48,6 @@ def upload(book_id:str):
     # Later send this with the post api
     pprint(final_dict)
 
-    # final_dict = dict()
-    # # fuck them, i'll just upload the complete folder
-    # book_id_folder = os.path.join(paths_dict['data_dir'], book_id)
-    # for dirpath, dirnames, filenames in os.walk(book_id_folder):
-    #     for filename in filenames:
-    #         local_filename = os.path.join(dirpath, filename)
-    #         cloud_filename = book_id + '/' + filename
-    #         storage.child(cloud_filename).put(local_filename)
-    #         print(storage.child(cloud_filename).get_url(None))
-            # print(file)
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
