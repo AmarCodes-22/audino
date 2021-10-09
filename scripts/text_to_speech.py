@@ -29,10 +29,11 @@ def tts(book_id:str):
             # Store the audio
             audio_obj.save(audio_obj_path)
             print('Conversion finished')
-        except:
             # Add the audio to books.yml
             books_dict[book_id]['files']['audio'] = audio_obj_path
             config_system.update_books(books_dict)
+        except:
+            print('There is some error in uploading')
     else:
         print('Audio file for this book already exists')
 

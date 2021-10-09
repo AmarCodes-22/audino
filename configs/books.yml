@@ -1,3 +1,20 @@
+'11':
+  files:
+    audio: /home/amar/projects/audino/data/11/audio_0.1.mp3
+    epub: /home/amar/projects/audino/data/11/11.epub
+    html: /home/amar/projects/audino/data/11/11.html
+    raw: /home/amar/projects/audino/data/11/11.txt
+    summary_json: /home/amar/projects/audino/data/11/summary_0.1.json
+    summary_text: /home/amar/projects/audino/data/11/summary_0.1.txt
+    thumbnail: /home/amar/projects/audino/data/11/11.jpg
+  meta:
+    AudioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2Faudio_0.1.mp3?alt=media
+    Author: Lewis Carroll
+    Description: null
+    Genre: fiction
+    SummaryUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2Fsummary_0.1.json?alt=media
+    ThumbnailUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2F11.jpg?alt=media
+    Title: Alice's Adventures in Wonderland
 '6130':
   files:
     audio: /home/amar/projects/audino/data/6130/audio_0.1.mp3

@@ -40,12 +40,16 @@ def get_titles(book:ebooklib.epub.EpubBook):
     # Get all the titles
     for item in book.toc:
         if isinstance(item, ebooklib.epub.Link):
-            # print(item.title)
             titles.append(item.title)
         elif isinstance(item, Tuple):
             for link in item[1]:
-                titles.append(link.title)
-                # print(link.title)
+                if isinstance(link, Tuple):
+                    for smaller_link in link[1]:
+                        if isinstance(smaller_link, ebooklib.epub.Link):
+                            titles.append(smaller_link.title)
+                elif isinstance(link, ebooklib.epub.Link):
+                    # print('here', link)
+                    titles.append(link.title)
 
     # Remove the clutter at the beginning
     content_index = 0
@@ -54,6 +58,7 @@ def get_titles(book:ebooklib.epub.EpubBook):
             content_index=i
 
     titles = titles[content_index+1:]
+    print('Titles: stored: ', titles)
     return titles
 
 def get_original_text(raw_book_path:str, titles:list):
@@ -97,14 +102,14 @@ def summarize(book_id:str, ratio:float):
     raw_book_path = books_dict[book_id]['files']['raw']
 
     original_text_dict = get_original_text(raw_book_path, titles)
-    print(len(original_text_dict))
+    print('length of original text dict', len(original_text_dict))
 
     data_dir = config_system.load_paths_config()['data_dir']
     summary_text = os.path.join(data_dir, book_id, 'summary_' + str(ratio) + '.txt')
     summary_json = os.path.join(data_dir, book_id, 'summary_' + str(ratio) + '.json')
 
-    if os.path.exists(summary_text):
-        print('Text summary already exists')
+    if os.path.exists(summary_text) and len(original_text_dict) == 0:
+        print("Text summary already exists or raw text wasn't parsed correctly")
     else:
         # Get the summary
         print('Getting the summary...')

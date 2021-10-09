@@ -45,17 +45,19 @@ def load_summary_config(summary_config_path):
 
     return summary_dict
 
-def update_books(book_dict):
+def update_books(book_dict:dict, book_id:str=None, remove:bool=False):
     paths_dict = load_paths_config()
     book_config_file = paths_dict['books_config_file']
 
     # read the current content of the yaml file
     with open(book_config_file) as file:
         curr_dict = yaml.safe_load(file)
-        # print(books_dict)
 
     with open(book_config_file, 'w') as file:
-        if curr_dict:
+        if remove and book_id:
+            curr_dict.pop(book_id)
+            yaml.safe_dump(curr_dict, file)
+        elif curr_dict:
             curr_dict.update(book_dict)
             yaml.safe_dump(curr_dict, file)
         else:

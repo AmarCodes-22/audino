@@ -41,7 +41,7 @@ class Book():
             os.makedirs(os.path.dirname(self.html_file_path), exist_ok=True)
 
             # storing the webpage content in a file
-            print('Storing html')
+            print('-----Storing html-----')
             with open(self.html_file_path, 'w') as file:
                 file.write(str(webpage_html))
             self.files_dict['html'] = self.html_file_path
@@ -74,7 +74,7 @@ class Book():
                         break
 
             if epub_url:
-                print('Saving epub')
+                print('-----Saving epub-----')
                 command = f'wget -O {self.epub_file_path} {epub_url}'
                 os.system(command)
                 self.files_dict['epub'] = self.epub_file_path
@@ -106,7 +106,7 @@ class Book():
                         break
 
             if raw_url:
-                print('Saving epub')
+                print('-----Saving raw-----')
                 command = f'wget -O {self.raw_file_path} {raw_url}'
                 os.system(command)
                 self.files_dict['raw'] = self.raw_file_path
@@ -129,7 +129,7 @@ class Book():
 
                 # saving the file
                 if image_url:
-                    print('Saving thumbnail')
+                    print('-----Saving thumbnail-----')
                     command = f'wget -O {self.thumbnail_file_path} {image_url}'
                     os.system(command)
                     self.files_dict['thumbnail'] = self.thumbnail_file_path
