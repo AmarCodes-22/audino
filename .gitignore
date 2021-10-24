@@ -5,3 +5,6 @@ datasets/
 pretrained.zip
 pretrained/
 Real-Time-Voice-Cloning/
+pretrained (original)/
+exploration.ipynb
+example_wavs/
