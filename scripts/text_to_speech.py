@@ -24,6 +24,11 @@ def text_to_speech(book_id:str):
 
     audio_obj_path = os.path.join(paths_dict['data_dir'], book_id,
                                   'audio_'+ratio+'.mp3')
+
+    # add the audiobook path to the books.yml file
+    books_dict[book_id]['files']['audio'] = audio_obj_path
+    config_system.update_books(books_dict)
+
     if not os.path.exists(audio_obj_path):
         # Get the audio
         language='en'

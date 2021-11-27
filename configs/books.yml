@@ -9,12 +9,33 @@
     thumbnail: /home/amar/projects/audino/data/11/11.jpg
   meta:
     AudioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2Faudio_0.1.mp3?alt=media
-    Author: Lewis Carroll
     Description: null
     Genre: fiction
+    SummaryText: null
     SummaryUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2Fsummary_0.1.json?alt=media
     ThumbnailUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/11%2F11.jpg?alt=media
-    Title: Alice's Adventures in Wonderland
+    audioUrl: null
+    authorName: Lewis Carroll
+    bookName: Alice's Adventures in Wonderland
+    thumbnailUrl: null
+'2554':
+  files:
+    audio: /home/amar/projects/audino/data/2554/audio_0.1.mp3
+    epub: /home/amar/projects/audino/data/2554/2554.epub
+    html: /home/amar/projects/audino/data/2554/2554.html
+    kshitij_json: /home/amar/projects/audino/data/2554/kshitij_0.1.json
+    raw: /home/amar/projects/audino/data/2554/2554.txt
+    summary_json: /home/amar/projects/audino/data/2554/summary_0.1.json
+    summary_text: /home/amar/projects/audino/data/2554/summary_0.1.txt
+    thumbnail: /home/amar/projects/audino/data/2554/2554.jpg
+  meta:
+    Description: null
+    audioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/2554%2Faudio_0.1.mp3?alt=media
+    authorName: Fyodor Dostoyevsky
+    bookName: Crime and Punishment
+    genreName: Fiction
+    summaryUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/2554%2Fkshitij.json?alt=media
+    thumbnailUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/2554%2F2554.jpg?alt=media
 '6130':
   files:
     audio: /home/amar/projects/audino/data/6130/audio_0.1.mp3
@@ -37,7 +58,7 @@
     audio: /home/amar/projects/audino/data/84/audio_20.mp3
     epub: /home/amar/projects/audino/data/84/84.epub
     raw: /home/amar/projects/audino/data/84/84.txt
-    summary: /home/amar/projects/audino/data/84/summary_20.json
+    summary_json: /home/amar/projects/audino/data/84/summary_20.json
     thumbnail: /home/amar/projects/audino/data/84/84.jpg
   meta_data:
     AudioUrl: https://firebasestorage.googleapis.com/v0/b/audino-327610.appspot.com/o/84%2Faudio_20.mp3?alt=media

@@ -149,10 +149,12 @@ def summarize(book_id: str, ratio: float):
                                 str(ratio) + '.txt')
     summary_json = os.path.join(data_dir, book_id, 'summary_' +
                                 str(ratio) + '.json')
+    kshitij_json = os.path.join(data_dir, book_id, 'kshitij_' +
+                                str(ratio) + '.json')
 
     if os.path.exists(summary_text) and len(original_text_dict) == 0:
         print("Text summary already exists or raw text \
-            wasn't parsed correctly")
+               wasn't parsed correctly")
     else:
         # Get the summary
         print('-----Getting the summary-----')
@@ -160,22 +162,43 @@ def summarize(book_id: str, ratio: float):
 
         # Store the summary in .txt file
         print('Storing in .txt file')
-        with open(summary_text, 'w') as file:
-            for k, v in summary_text_dict.items():
-                file.write(k)
-                file.write('\n\n')
-                file.write(v)
-                file.write('\n\n')
+        if not os.path.exists(summary_text):
+            with open(summary_text, 'w') as file:
+                for k, v in summary_text_dict.items():
+                    file.write(k)
+                    file.write('\n\n')
+                    file.write(v)
+                    file.write('\n\n')
+        else:
+            print('Summary text file already exists')
 
         # Store the summary in .json file
         print('Storing in json file')
-        json_file = open(summary_json, 'w')
-        json.dump(summary_text_dict, json_file, indent=4)
+        if not os.path.exists(summary_json):
+            json_file = open(summary_json, 'w')
+            json.dump(summary_text_dict, json_file, indent=4)
+            json_file.close()
+        else:
+            print('Summary json file already exists')
+
+        # store a file for kshitij
+        all_text = ''
+        with open(summary_text) as f:
+            all_text = ''.join(f.readlines())[:5000]
+        
+        kshitij_dict = {
+            "summary": all_text
+        }
+        
+        print('Storing kshitij file')
+        json_file = open(kshitij_json, 'w')
+        json.dump(kshitij_dict, json_file, indent=4)
         json_file.close()
 
         # Add the summary paths to books.yml
         books_dict[book_id]['files']['summary_text'] = summary_text
         books_dict[book_id]['files']['summary_json'] = summary_json
+        books_dict[book_id]['files']['kshitij_json'] = kshitij_json
 
         config_system.update_books(books_dict)
 

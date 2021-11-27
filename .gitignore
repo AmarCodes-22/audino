@@ -8,3 +8,7 @@ Real-Time-Voice-Cloning/
 pretrained (original)/
 exploration.ipynb
 example_wavs/
+.idea/
+wavs/
+scripts/post.py
+scripts/voice_clone.py

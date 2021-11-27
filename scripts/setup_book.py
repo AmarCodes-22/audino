@@ -243,7 +243,7 @@ def setup_book(book_id: str):
     meta_dict['authorName'] = None
     meta_dict['thumbnailUrl'] = None
     meta_dict['Description'] = None
-    meta_dict['SummaryText'] = None
+    # meta_dict['SummaryText'] = None
     meta_dict['audioUrl'] = None
     pprint(meta_dict)
 
