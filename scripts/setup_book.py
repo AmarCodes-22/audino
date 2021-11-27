@@ -247,6 +247,7 @@ def setup_book(book_id: str):
     meta_dict['audioUrl'] = None
     pprint(meta_dict)
 
+    # joining the two dictionaries for the final dictionary
     final_dict = {
         book_id: {
             'files': files_dict,

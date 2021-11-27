@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from pprint import pprint
+# from pprint import pprint
 from typing import Tuple
 
 import ebooklib
@@ -10,31 +10,46 @@ from gensim import summarization
 
 from pkgs.utils import config_system
 
+# load paths, books dictionaries
 paths_dict = config_system.load_paths_config()
 books_dict = config_system.load_books_config(paths_dict['books_config_file'])
 # pprint(books_dict)
 
-def store_title_author(book:ebooklib.epub.EpubBook, book_id:str) -> None:
-    """ Store the title and author of the book in books.yml """
+
+def store_title_author(book: ebooklib.epub.EpubBook, book_id: str) -> None:
+    """Stores the book's title, author in books.yml
+
+    Args:
+        book (ebooklib.epub.EpubBook): book object for the current book-id
+        book_id (str): id of the book currently under processsing
+    """
     # Get the book title
-    if not books_dict[book_id]['meta']['Title']:
+    if not books_dict[book_id]['meta']['bookName']:
         book_title = book.get_metadata('DC', 'title')[0][0]
-        books_dict[book_id]['meta']['Title'] = book_title
+        books_dict[book_id]['meta']['bookName'] = book_title
     else:
         print('Title already filled')
 
     # Get the book author
-    if not books_dict[book_id]['meta']['Author']:
+    if not books_dict[book_id]['meta']['authorName']:
         book_author = book.get_metadata('DC', 'creator')[0][0]
-        books_dict[book_id]['meta']['Author'] = book_author
+        books_dict[book_id]['meta']['authorName'] = book_author
     else:
         print('Author name already filled')
 
     # Add the meta data to the books.yml file
     config_system.update_books(books_dict)
 
-def get_titles(book:ebooklib.epub.EpubBook):
-    """ Get the titles in the book for summary outline """
+
+def get_titles(book: ebooklib.epub.EpubBook) -> list:
+    """Gets the titles in the book for generating the summary outline
+
+    Args:
+        book (ebooklib.epub.EpubBook): book object for the current book-id
+
+    Returns:
+        titles (list): all the titles that will section the summary
+    """
     titles = list()
 
     # Get all the titles
@@ -51,18 +66,33 @@ def get_titles(book:ebooklib.epub.EpubBook):
                     # print('here', link)
                     titles.append(link.title)
 
-    # Remove the clutter at the beginning
-    content_index = 0
-    for i, title in enumerate(titles):
-        if 'content' in title.lower():
-            content_index=i
+    # Remove the clutter
+    clean_titles = list()
+    # print('titles', titles)
+    for title in titles:
+        if 'chapter' in title.lower():
+            clean_titles.append(title)
 
-    titles = titles[content_index+1:]
-    print('Titles: stored: ', titles)
-    return titles
+    # content_index = 0
+    # for i, title in enumerate(titles):
+    #     if 'content' in title.lower():
+    #         content_index=i
+    # titles = titles[content_index+1:]
 
-def get_original_text(raw_book_path:str, titles:list):
-    """ Get the original text and store it in a dictionary"""
+    print('Titles: stored: ', clean_titles)
+    return clean_titles
+
+
+def get_original_text(raw_book_path: str, titles: list) -> dict:
+    """Get the raw text and store it in a dictionary keyed by sections
+
+    Args:
+        raw_book_path (str): path to the raw format of the book
+        titles (list): titles used to section the book
+
+    Returns:
+        dict: raw text in a dict keyed by sections
+    """
     text_dict = dict()
     with open(raw_book_path) as file:
         lines = file.readlines()
@@ -75,13 +105,23 @@ def get_original_text(raw_book_path:str, titles:list):
 
     return text_dict
 
-def get_summary(text_dict:dict, ratio:float):
-    """ Get the summary.  """
+
+def get_summary(text_dict: dict, ratio: float):
+    """Summarizes the text in the dictionary
+
+    Args:
+        text_dict (dict): dictionary of original text keyed by chapters
+        ratio (float): ratio of length of summary to length of original text
+
+    Returns:
+        dict: dictionary of summary text keyed by sections
+    """
     # print('Length before summarization')
     # for k, v in text_dict.items():
     #     print(k, len(v))
 
     for k, v in text_dict.items():
+        print(k, len(v))
         text_dict[k] = summarization.summarize(v, ratio=ratio)
 
     # print('Length after summarization')
@@ -91,7 +131,7 @@ def get_summary(text_dict:dict, ratio:float):
     return text_dict
 
 
-def summarize(book_id:str, ratio:float):
+def summarize(book_id: str, ratio: float):
     epub_file_path = books_dict[book_id]['files']['epub']
     book = epub.read_epub(epub_file_path)
 
@@ -105,28 +145,29 @@ def summarize(book_id:str, ratio:float):
     print('length of original text dict', len(original_text_dict))
 
     data_dir = config_system.load_paths_config()['data_dir']
-    summary_text = os.path.join(data_dir, book_id, 'summary_' + str(ratio) + '.txt')
-    summary_json = os.path.join(data_dir, book_id, 'summary_' + str(ratio) + '.json')
+    summary_text = os.path.join(data_dir, book_id, 'summary_' +
+                                str(ratio) + '.txt')
+    summary_json = os.path.join(data_dir, book_id, 'summary_' +
+                                str(ratio) + '.json')
 
     if os.path.exists(summary_text) and len(original_text_dict) == 0:
-        print("Text summary already exists or raw text wasn't parsed correctly")
+        print("Text summary already exists or raw text \
+            wasn't parsed correctly")
     else:
         # Get the summary
-        print('Getting the summary...')
+        print('-----Getting the summary-----')
         summary_text_dict = get_summary(original_text_dict, ratio)
 
-        # Store in .text file
+        # Store the summary in .txt file
         print('Storing in .txt file')
         with open(summary_text, 'w') as file:
             for k, v in summary_text_dict.items():
                 file.write(k)
-                file.write('\n')
-                file.write('\n')
+                file.write('\n\n')
                 file.write(v)
-                file.write('\n')
-                file.write('\n')
+                file.write('\n\n')
 
-        # Store in json file
+        # Store the summary in .json file
         print('Storing in json file')
         json_file = open(summary_json, 'w')
         json.dump(summary_text_dict, json_file, indent=4)
@@ -138,27 +179,27 @@ def summarize(book_id:str, ratio:float):
 
         config_system.update_books(books_dict)
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Summarize the book with bookid provided')
+    parser = argparse.ArgumentParser(
+        description='Summarize the book with bookid provided')
     parser.add_argument(
-        '--bookid', 
-        dest='book_id', 
-        type=str, 
+        '--bookid',
+        dest='book_id',
+        type=str,
         help='Enter the book id which you want to summarize.',
         required=True
     )
     parser.add_argument(
         '--ratio',
-        dest='ratio', 
-        type=float, 
+        dest='ratio',
+        type=float,
         help='Enter the ratio of lengths of summary text to the original text',
         required=False
     )
     args = parser.parse_args()
     summarize(args.book_id, args.ratio)
 
+
 if __name__ == '__main__':
     main()
-
-"""todo
-"""
